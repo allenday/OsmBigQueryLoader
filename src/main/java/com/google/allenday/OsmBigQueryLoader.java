@@ -3,10 +3,12 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import org.akashihi.osm.parallelpbf.ParallelBinaryParser;
 import org.akashihi.osm.parallelpbf.entity.*;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.LoggerFactory;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,6 +20,9 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 @SuppressWarnings("PMD.UnusedPrivateMethod")
 public class OsmBigQueryLoader {
+
+    private ObjectMapper mapper = new ObjectMapper();
+
     /**
      * TODO.
      */
@@ -38,7 +43,6 @@ public class OsmBigQueryLoader {
      * TODO.
      */
     private AtomicLong changesetsCounter = new AtomicLong();
-
     /**
      * TODO.
      * @param header Header
@@ -49,7 +53,6 @@ public class OsmBigQueryLoader {
             output.append("\n");
         }
     }
-
     /**
      * TODO.
      * @param bbox BoundBoxs
@@ -60,6 +63,14 @@ public class OsmBigQueryLoader {
             output.append("\n");
         }
     }
+    /**
+     * TODO.
+     * @param id Long
+     */
+    private void processChangesets(@SuppressWarnings("unused") final Long id) {
+        changesetsCounter.incrementAndGet();
+    }
+
 
     /**
      * TODO.
@@ -67,6 +78,8 @@ public class OsmBigQueryLoader {
      */
     private void processNodes(@SuppressWarnings("unused") final Node node) {
         nodesCounter.incrementAndGet();
+
+
     }
 
     /**
@@ -75,6 +88,24 @@ public class OsmBigQueryLoader {
      */
     private void processWays(@SuppressWarnings("unused") final Way way) {
         waysCounter.incrementAndGet();
+        com.google.allenday.osm.domain.Way bean = new com.google.allenday.osm.domain.Way();
+
+        bean.setId(way.getId());
+        bean.setVersion(way.getInfo().getVersion());
+        bean.setUsername(way.getInfo().getUsername());
+        bean.setChangeset(way.getInfo().getChangeset());
+        bean.setVisible(way.getInfo().isVisible());
+        bean.setTimestamp(way.getInfo().getTimestamp());
+        bean.setNodes(way.getNodes());
+        bean.setTags(way.getTags());
+
+        try {
+            //jsonInString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(bean);
+            String jsonInString = mapper.writeValueAsString(bean);
+            System.err.println(jsonInString);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -83,14 +114,6 @@ public class OsmBigQueryLoader {
      */
     private void processRelations(@SuppressWarnings("unused") final Relation relation) {
         relationsCounter.incrementAndGet();
-    }
-
-    /**
-     * TODO.
-     * @param id Long
-     */
-    private void processChangesets(@SuppressWarnings("unused") final Long id) {
-        changesetsCounter.incrementAndGet();
     }
 
     /**
@@ -174,6 +197,9 @@ public class OsmBigQueryLoader {
             for (String f : args[1].split(",")) {
                 filters.add(f);
             }
+        }
+        else {
+            filters.add("all");
         }
         if (args.length > 2) {
             threads = Integer.valueOf(args[2]);
