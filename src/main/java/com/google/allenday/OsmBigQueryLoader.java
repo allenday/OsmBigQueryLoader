@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicLong;
+//import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Load OSM records to BigQuery.
@@ -41,19 +41,19 @@ public class OsmBigQueryLoader {
     /**
      * TODO.
      */
-    private AtomicLong nodesCounter = new AtomicLong();
+    //private AtomicLong nodesCounter = new AtomicLong();
     /**
      * TODO.
      */
-    private AtomicLong waysCounter = new AtomicLong();
+    //private AtomicLong waysCounter = new AtomicLong();
     /**
      * TODO.
      */
-    private AtomicLong relationsCounter = new AtomicLong();
+    //private AtomicLong relationsCounter = new AtomicLong();
     /**
      * TODO.
      */
-    private AtomicLong changesetsCounter = new AtomicLong();
+    //private AtomicLong changesetsCounter = new AtomicLong();
     /**
      * TODO.
      * @param header Header
