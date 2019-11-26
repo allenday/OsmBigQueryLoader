@@ -9,23 +9,44 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * TODO.
+ */
 @DefaultCoder(AvroCoder.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Way {
 
+    /**
+     * TODO.
+     */
     private Long id;
 
+    /**
+     * TODO.
+     */
     @Nullable
     private Integer version;
 
+    /**
+     * TODO.
+     */
     @Nullable
     private String username;
 
+    /**
+     * TODO.
+     */
     @Nullable
     private Long changeset;
 
+    /**
+     * TODO.
+     */
     private Boolean visible;
 
+    /**
+     * TODO.
+     */
     @Nullable
     @JsonProperty("osm_timestamp")
     private Long timestamp;
@@ -34,81 +55,159 @@ public class Way {
     //@Nullable
     //private String geometry;
 
+    /**
+     * TODO.
+     */
     private List<Long> nodes;
 
+    /**
+     * TODO.
+     */
     @JsonProperty("all_tags")
-    private Map<String,String> tags;
+    private Map<String, String> tags;
 
-    public Way() {}
+    /**
+     * TODO.
+     */
+    public Way() {
 
+    }
+
+    /**
+     * TODO.
+     * @return Long
+     */
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    /**
+     * TODO.
+     * @param val to set
+     */
+    public void setId(final Long val) {
+        this.id = val;
     }
 
+    /**
+     * TODO.
+     * @return Integer
+     */
     public Integer getVersion() {
         return version;
     }
 
-    public void setVersion(Integer version) {
-        this.version = version;
+    /**
+     * TODO.
+     * @param val to set
+     */
+    public void setVersion(final Integer val) {
+        this.version = val;
     }
 
+    /**
+     * TODO.
+     * @return String
+     */
     public String getUsername() {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    /**
+     * TODO.
+     * @param val to set
+     */
+    public void setUsername(final String val) {
+        this.username = val;
     }
 
+    /**
+     * TODO.
+     * @return Long
+     */
     public Long getchangeset() {
         return changeset;
     }
 
-    public void setChangeset(Long changeset) {
-        this.changeset = changeset;
+    /**
+     * TODO.
+     * @param val to set
+     */
+    public void setChangeset(final Long val) {
+        this.changeset = val;
     }
 
+    /**
+     * TODO.
+     * @return Boolean
+     */
     public Boolean getVisible() {
         return visible;
     }
 
-    public void setVisible(Boolean visible) {
-        this.visible = visible;
+    /**
+     * TODO.
+     * @param val to set
+     */
+    public void setVisible(final Boolean val) {
+        this.visible = val;
     }
 
+    /**
+     * TODO.
+     * @return Long
+     */
     public Long getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Long timestamp) {
-        this.timestamp = timestamp;
+    /**
+     * TODO.
+     * @param val to set
+     */
+    public void setTimestamp(final Long val) {
+        this.timestamp = val;
     }
 
+    /**
+     * TODO.
+     * @return List<Long>
+     */
     public List<Long> getNodes() {
         return nodes;
     }
 
-    public void setNodes(List<Long> nodes) {
-        this.nodes = nodes;
+    /**
+     * TODO.
+     * @param val to set
+     */
+    public void setNodes(final List<Long> val) {
+        this.nodes = val;
     }
 
-    public Map<String,String> getTags() {
+    /**
+     * TODO.
+     * @return Map<String, String>
+     */
+    public Map<String, String> getTags() {
         return tags;
     }
 
-    public void setTags(Map<String,String> tags) {
-        this.tags = tags;
+    /**
+     * TODO.
+     * @param val to set
+     */
+    public void setTags(final Map<String, String> val) {
+        this.tags = val;
     }
 
-
-
+    /**
+     * TODO.
+     * @param o
+     * @return true if objects are equal
+     */
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
@@ -116,21 +215,36 @@ public class Way {
             return false;
         }
         Way way = (Way) o;
-        return Objects.equal(id, way.id) &&
-                Objects.equal(version, way.version) &&
-                Objects.equal(username, way.username) &&
-                Objects.equal(changeset, way.changeset) &&
-                Objects.equal(visible, way.visible) &&
-                Objects.equal(timestamp, way.timestamp) &&
-                Objects.equal(nodes, way.nodes) &&
+        return Objects.equal(id, way.id)
+                &&
+                Objects.equal(version, way.version)
+                &&
+                Objects.equal(username, way.username)
+                &&
+                Objects.equal(changeset, way.changeset)
+                &&
+                Objects.equal(visible, way.visible)
+                &&
+                Objects.equal(timestamp, way.timestamp)
+                &&
+                Objects.equal(nodes, way.nodes)
+                &&
                 Objects.equal(tags, way.tags);
     }
 
+    /**
+     * TODO.
+     * @return hash of the object
+     */
     @Override
     public int hashCode() {
         return Objects.hashCode(id, version, username, changeset, visible, timestamp, nodes, tags);
     }
 
+    /**
+     * TODO.
+     * @return serialization of the object.
+     */
     @Override
     public String toString() {
         return Objects.toStringHelper(this)

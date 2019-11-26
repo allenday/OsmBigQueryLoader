@@ -21,6 +21,9 @@ import java.util.concurrent.atomic.AtomicLong;
 @SuppressWarnings("PMD.UnusedPrivateMethod")
 public class OsmBigQueryLoader {
 
+    /**
+     * TODO.
+     */
     private ObjectMapper mapper = new ObjectMapper();
 
     /**
@@ -197,8 +200,7 @@ public class OsmBigQueryLoader {
             for (String f : args[1].split(",")) {
                 filters.add(f);
             }
-        }
-        else {
+        } else {
             filters.add("all");
         }
         if (args.length > 2) {
