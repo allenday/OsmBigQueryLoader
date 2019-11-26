@@ -127,22 +127,24 @@ public class OsmBigQueryLoader {
         ParallelBinaryParser parser = new ParallelBinaryParser(inputStream, threads)
             .onComplete(this::printOnCompletions);
 
-        if (filters.contains("header") || filters.contains("all")) {
+        Boolean all = filters.contains("all") ? true : false;
+
+        if (filters.contains("header") || all) {
             parser = parser.onHeader(this::processHeader);
         }
-        if (filters.contains("boundbox") || filters.contains("all")) {
+        if (filters.contains("boundbox") || all) {
             parser = parser.onBoundBox(this::processBoundingBox);
         }
-        if (filters.contains("node") || filters.contains("all")) {
+        if (filters.contains("node") || all) {
             parser = parser.onNode(this::processNodes);
         }
-        if (filters.contains("way") || filters.contains("all")) {
+        if (filters.contains("way") || all) {
             parser = parser.onWay(this::processWays);
         }
-        if (filters.contains("relation") || filters.contains("all")) {
+        if (filters.contains("relation") || all) {
             parser = parser.onRelation(this::processRelations);
         }
-        if (filters.contains("changeset") || filters.contains("all")) {
+        if (filters.contains("changeset") || all) {
             parser = parser.onChangeset(this::processChangesets);
         }
 
