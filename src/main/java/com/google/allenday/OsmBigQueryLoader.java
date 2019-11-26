@@ -18,9 +18,17 @@ import java.util.concurrent.atomic.AtomicLong;
  * Load OSM records to BigQuery.
  *
  */
-@SuppressWarnings("PMD.UnusedPrivateMethod")
+@SuppressWarnings({"PMD.UnusedPrivateMethod", "PMD.UnusedPrivateField"})
 public class OsmBigQueryLoader {
-
+    /**
+     * TODO.
+     * @param s to print
+     */
+    public static void safePrintln(final String s) {
+        synchronized (System.out) {
+            System.out.println(s);
+        }
+    }
     /**
      * TODO.
      */
@@ -51,27 +59,27 @@ public class OsmBigQueryLoader {
      * @param header Header
      */
     void processHeader(@SuppressWarnings("unused") final Header header) {
-        synchronized (output) {
-            output.append(header);
-            output.append("\n");
-        }
+//        synchronized (output) {
+//            output.append(header);
+//            output.append("\n");
+//        }
     }
     /**
      * TODO.
      * @param bbox BoundBoxs
      */
     private void processBoundingBox(@SuppressWarnings("unused") final BoundBox bbox) {
-        synchronized (output) {
-            output.append(bbox);
-            output.append("\n");
-        }
+//        synchronized (output) {
+//            output.append(bbox);
+//            output.append("\n");
+//        }
     }
     /**
      * TODO.
      * @param id Long
      */
     private void processChangesets(@SuppressWarnings("unused") final Long id) {
-        changesetsCounter.incrementAndGet();
+//        changesetsCounter.incrementAndGet();
     }
 
 
@@ -80,7 +88,7 @@ public class OsmBigQueryLoader {
      * @param node Node
      */
     private void processNodes(@SuppressWarnings("unused") final Node node) {
-        nodesCounter.incrementAndGet();
+//        nodesCounter.incrementAndGet();
 
 
     }
@@ -90,7 +98,7 @@ public class OsmBigQueryLoader {
      * @param way Way
      */
     private void processWays(@SuppressWarnings("unused") final Way way) {
-        waysCounter.incrementAndGet();
+//        waysCounter.incrementAndGet();
         com.google.allenday.osm.domain.Way bean = new com.google.allenday.osm.domain.Way();
 
         bean.setId(way.getId());
@@ -105,7 +113,7 @@ public class OsmBigQueryLoader {
         try {
             //jsonInString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(bean);
             String jsonInString = mapper.writeValueAsString(bean);
-            System.err.println(jsonInString);
+            safePrintln(jsonInString);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -116,31 +124,31 @@ public class OsmBigQueryLoader {
      * @param relation Relation
      */
     private void processRelations(@SuppressWarnings("unused") final Relation relation) {
-        relationsCounter.incrementAndGet();
+//        relationsCounter.incrementAndGet();
     }
 
     /**
      * TODO.
      */
     private void printOnCompletions() {
-        output.append("Node count: ");
-        output.append(nodesCounter.get());
-        output.append("\n");
-
-        output.append("Way count: ");
-        output.append(waysCounter.get());
-        output.append("\n");
-
-        output.append("Relations count: ");
-        output.append(relationsCounter.get());
-        output.append("\n");
-
-        output.append("Changesets count: ");
-        output.append(changesetsCounter.get());
-        output.append("\n");
-
-        System.out.println("Reading results:");
-        System.out.println(output);
+//        output.append("Node count: ");
+//        output.append(nodesCounter.get());
+//        output.append("\n");
+//
+//        output.append("Way count: ");
+//        output.append(waysCounter.get());
+//        output.append("\n");
+//
+//        output.append("Relations count: ");
+//        output.append(relationsCounter.get());
+//        output.append("\n");
+//
+//        output.append("Changesets count: ");
+//        output.append(changesetsCounter.get());
+//        output.append("\n");
+//
+//        System.err.println("Reading results:");
+//        System.err.println(output);
     }
 
     /**
@@ -185,6 +193,7 @@ public class OsmBigQueryLoader {
     public static void main(final String[] args) throws FileNotFoundException {
         Logger root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
         root.setLevel(Level.TRACE);
+
 
         InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("sample.pbf");
         Integer threads = 1;
