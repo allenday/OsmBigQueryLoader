@@ -6,7 +6,6 @@ import org.apache.beam.sdk.coders.AvroCoder;
 import org.apache.beam.sdk.coders.DefaultCoder;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * TODO.
@@ -18,28 +17,51 @@ public class Relation extends OsmEntity {
     /**
      * TODO.
      */
-    private List<Map<Long, String>> relations;
+    private List<RelationMember> members;
 
     /**
      * TODO.
      */
-    private List<Map<Long, String>> ways;
+    private List<RelationMember> relations;
 
     /**
      * TODO.
      */
-    private List<Map<Long, String>> nodes;
+    private List<RelationMember> ways;
+
+    /**
+     * TODO.
+     */
+    private List<RelationMember> nodes;
 
     /**
      * TODO.
      */
     public Relation() {
 
-    }    /**
+    }
+
+    /**
      * TODO.
-     * @return List<Map<Long, String>>
+     * @return List<RelationMember>
      */
-    public List<Map<Long, String>> getRelations() {
+    public List<RelationMember> getMembers() {
+        return members;
+    }
+
+    /**
+     * TODO.
+     * @param val to set
+     */
+    public void setMembers(final List<RelationMember> val) {
+        this.members = val;
+    }
+
+    /**
+     * TODO.
+     * @return List<RelationMember>
+     */
+    public List<RelationMember> getRelations() {
         return relations;
     }
 
@@ -47,15 +69,15 @@ public class Relation extends OsmEntity {
      * TODO.
      * @param val to set
      */
-    public void setRelations(final List<Map<Long, String>> val) {
+    public void setRelations(final List<RelationMember> val) {
         this.relations = val;
     }
 
     /**
      * TODO.
-     * @return List<Map<Long,String>>
+     * @return List<RelationMember>
      */
-    public List<Map<Long, String>> getWays() {
+    public List<RelationMember> getWays() {
         return ways;
     }
 
@@ -63,15 +85,15 @@ public class Relation extends OsmEntity {
      * TODO.
      * @param val to set
      */
-    public void setWays(final List<Map<Long, String>> val) {
+    public void setWays(final List<RelationMember> val) {
         this.ways = val;
     }
 
     /**
      * TODO.
-     * @return List<Map<Long,String>>
+     * @return List<RelationMember>
      */
-    public List<Map<Long, String>> getNodes() {
+    public List<RelationMember> getNodes() {
         return nodes;
     }
 
@@ -79,7 +101,7 @@ public class Relation extends OsmEntity {
      * TODO.
      * @param val to set
      */
-    public void setNodes(final List<Map<Long,  String>> val) {
+    public void setNodes(final List<RelationMember> val) {
         this.nodes = val;
     }
 
@@ -108,6 +130,8 @@ public class Relation extends OsmEntity {
                 Objects.equal(getVisible(), rel.getVisible())
                 &&
                 Objects.equal(getTimestamp(), rel.getTimestamp())
+                &&
+                Objects.equal(getMembers(), rel.getMembers())
                 &&
                 Objects.equal(getRelations(), rel.getRelations())
                 &&
@@ -143,6 +167,7 @@ public class Relation extends OsmEntity {
                 .add("changeset", getChangeset())
                 .add("visible", getVisible())
                 .add("timestamp", getTimestamp())
+                .add("members", getMembers())
                 .add("relations", getRelations())
                 .add("ways", getWays())
                 .add("nodes", getNodes())

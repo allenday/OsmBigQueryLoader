@@ -10,7 +10,6 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
-//import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Load OSM records to BigQuery.
@@ -28,13 +27,12 @@ public class OsmBigQueryLoader {
         synchronized (w) {
             w.write(s + "\n");
         }
-//        System.err.println(s);
+        //System.err.println(s);
     }
     /**
      * TODO.
      */
     private ObjectMapper mapper = new ObjectMapper();
-
     /**
      * TODO.
      */
@@ -46,29 +44,13 @@ public class OsmBigQueryLoader {
     private final StringBuilder output = new StringBuilder();
     /**
      * TODO.
-     */
-    //private AtomicLong nodesCounter = new AtomicLong();
-    /**
-     * TODO.
-     */
-    //private AtomicLong waysCounter = new AtomicLong();
-    /**
-     * TODO.
-     */
-    //private AtomicLong relationsCounter = new AtomicLong();
-    /**
-     * TODO.
-     */
-    //private AtomicLong changesetsCounter = new AtomicLong();
-    /**
-     * TODO.
      * @param header Header
      */
     void processHeader(@SuppressWarnings("unused") final Header header) {
-//        synchronized (output) {
-//            output.append(header);
-//            output.append("\n");
-//        }
+        synchronized (output) {
+            output.append(header);
+            output.append("\n");
+        }
     }
     /**
      * TODO.
@@ -87,8 +69,6 @@ public class OsmBigQueryLoader {
     private void processChangesets(@SuppressWarnings("unused") final Long id) {
 //        changesetsCounter.incrementAndGet();
     }
-
-
     /**
      * TODO.
      * @param node Node
@@ -111,11 +91,11 @@ public class OsmBigQueryLoader {
             String jsonInString = mapper.writeValueAsString(bean);
             safePrintln(outputs.get("node"), jsonInString);
         } catch (IOException e) {
+            System.err.println("********** 3");
             e.printStackTrace();
         }
 
     }
-
     /**
      * TODO.
      * @param way Way
@@ -134,10 +114,10 @@ public class OsmBigQueryLoader {
         bean.setNodes(way.getNodes());
 
         try {
-            //jsonInString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(bean);
             String jsonInString = mapper.writeValueAsString(bean);
             safePrintln(outputs.get("way"), jsonInString);
         } catch (IOException e) {
+            System.err.println("********** 2");
             e.printStackTrace();
         }
     }
@@ -150,20 +130,33 @@ public class OsmBigQueryLoader {
 //        relationsCounter.incrementAndGet();
         com.google.allenday.osm.domain.Relation bean = new com.google.allenday.osm.domain.Relation();
 
-        List<Map<Long, String>> relations = new ArrayList<Map<Long, String>>();
-        List<Map<Long, String>> ways = new ArrayList<Map<Long, String>>();
-        List<Map<Long, String>> nodes = new ArrayList<Map<Long, String>>();
+        //TODO refactor this to use single list with a type field, apparently
+        //it's possible to collate heterogeneous types in a composite and order matters
+        List<com.google.allenday.osm.domain.RelationMember> beans
+                = new ArrayList<com.google.allenday.osm.domain.RelationMember>();
+        List<com.google.allenday.osm.domain.RelationMember> relations
+                = new ArrayList<com.google.allenday.osm.domain.RelationMember>();
+        List<com.google.allenday.osm.domain.RelationMember> ways
+                = new ArrayList<com.google.allenday.osm.domain.RelationMember>();
+        List<com.google.allenday.osm.domain.RelationMember> nodes
+                = new ArrayList<com.google.allenday.osm.domain.RelationMember>();
 
         List<RelationMember> members = rel.getMembers();
         for (RelationMember member  : members) {
-            Map<Long, String> kv = new HashMap<Long, String>();
-            kv.put(member.getId(), member.getRole());
+            com.google.allenday.osm.domain.RelationMember rm = new com.google.allenday.osm.domain.RelationMember();
+
+            rm.setId(member.getId());
+            rm.setRole(member.getRole());
+            rm.setType(member.getType().name());
+
+            beans.add(rm);
+
             if (member.getType()  == RelationMember.Type.NODE) {
-                nodes.add(kv);
+                nodes.add(rm);
             } else if (member.getType() == RelationMember.Type.WAY) {
-                ways.add(kv);
+                ways.add(rm);
             } else if (member.getType() == RelationMember.Type.RELATION) {
-                relations.add(kv);
+                relations.add(rm);
             }
         }
 
@@ -174,6 +167,7 @@ public class OsmBigQueryLoader {
         bean.setVisible(rel.getInfo().isVisible());
         bean.setTimestamp(rel.getInfo().getTimestamp());
         bean.setTags(rel.getTags());
+        bean.setMembers(beans);
         bean.setRelations(relations);
         bean.setWays(ways);
         bean.setNodes(nodes);
@@ -183,6 +177,7 @@ public class OsmBigQueryLoader {
             String jsonInString = mapper.writeValueAsString(bean);
             safePrintln(outputs.get("relation"), jsonInString);
         } catch (IOException e) {
+            System.err.println("********** 1");
             e.printStackTrace();
         }
     }
@@ -220,7 +215,7 @@ public class OsmBigQueryLoader {
      */
     private void execute(final Set<String> filters, final int threads, final InputStream inputStream)
             throws IOException {
-        ParallelBinaryParser parser = new ParallelBinaryParser(inputStream, threads)
+        ParallelBinaryParser parser = new ParallelBinaryParser(inputStream, threads, threads, 0)
             .onComplete(this::printOnCompletions);
 
         Boolean all = filters.contains("all") ? true : false;
@@ -257,6 +252,10 @@ public class OsmBigQueryLoader {
         }
 
         parser.parse();
+
+        for (BufferedWriter bw : outputs.values()) {
+            bw.close();
+        }
     }
 
     /**
