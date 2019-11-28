@@ -3,6 +3,7 @@ package com.google.allenday.osm.domain;
 import org.apache.avro.reflect.Nullable;
 import org.codehaus.jackson.annotate.JsonProperty;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -52,7 +53,7 @@ public abstract class OsmEntity {
      * TODO.
      */
     @JsonProperty("all_tags")
-    private Map<String, String> tags;
+    private List<Map<String, String>> tags;
 
     /**
      * TODO.
@@ -153,9 +154,9 @@ public abstract class OsmEntity {
 
     /**
      * TODO.
-     * @return Map<String, String>
+     * @return List<Map<String, String>>
      */
-    public Map<String, String> getTags() {
+    public List<Map<String, String>> getTags() {
         return tags;
     }
 
@@ -163,7 +164,7 @@ public abstract class OsmEntity {
      * TODO.
      * @param val to set
      */
-    public void setTags(final Map<String, String> val) {
+    public void setTags(final List<Map<String, String>> val) {
         this.tags = val;
     }
 

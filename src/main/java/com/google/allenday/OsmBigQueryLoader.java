@@ -102,9 +102,18 @@ public class OsmBigQueryLoader {
         bean.setChangeset(node.getInfo().getChangeset());
         bean.setVisible(node.getInfo().isVisible());
         bean.setTimestamp(node.getInfo().getTimestamp());
-        bean.setTags(node.getTags());
         bean.setLatitude(node.getLat());
         bean.setLongitude(node.getLon());
+
+        List<Map<String, String>> beanTags = new ArrayList<>();
+        Map<String, String> tags = node.getTags();
+        for (String k : tags.keySet()) {
+            Map<String,String> kv = new HashMap<>();
+            kv.put("key",k);
+            kv.put("value",tags.get(k));
+            beanTags.add(kv);
+        }
+        bean.setTags(beanTags);
 
         try {
             String jsonInString = mapper.writeValueAsString(bean);
@@ -128,8 +137,17 @@ public class OsmBigQueryLoader {
         bean.setChangeset(way.getInfo().getChangeset());
         bean.setVisible(way.getInfo().isVisible());
         bean.setTimestamp(way.getInfo().getTimestamp());
-        bean.setTags(way.getTags());
         bean.setNodes(way.getNodes());
+
+        List<Map<String, String>> beanTags = new ArrayList<>();
+        Map<String, String> tags = way.getTags();
+        for (String k : tags.keySet()) {
+            Map<String,String> kv = new HashMap<>();
+            kv.put("key",k);
+            kv.put("value",tags.get(k));
+            beanTags.add(kv);
+        }
+        bean.setTags(beanTags);
 
         try {
             String jsonInString = mapper.writeValueAsString(bean);
@@ -179,11 +197,20 @@ public class OsmBigQueryLoader {
         bean.setChangeset(rel.getInfo().getChangeset());
         bean.setVisible(rel.getInfo().isVisible());
         bean.setTimestamp(rel.getInfo().getTimestamp());
-        bean.setTags(rel.getTags());
         bean.setMembers(beans);
         bean.setRelations(relations);
         bean.setWays(ways);
         bean.setNodes(nodes);
+
+        List<Map<String, String>> beanTags = new ArrayList<>();
+        Map<String, String> tags = rel.getTags();
+        for (String k : tags.keySet()) {
+            Map<String,String> kv = new HashMap<>();
+            kv.put("key",k);
+            kv.put("value",tags.get(k));
+            beanTags.add(kv);
+        }
+        bean.setTags(beanTags);
 
         try {
             String jsonInString = mapper.writeValueAsString(bean);
