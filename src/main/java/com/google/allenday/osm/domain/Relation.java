@@ -22,17 +22,17 @@ public class Relation extends OsmEntity {
     /**
      * TODO.
      */
-    private List<RelationMember> relations;
+    //private List<RelationMember> relations;
 
     /**
      * TODO.
      */
-    private List<RelationMember> ways;
+    //private List<RelationMember> ways;
 
     /**
      * TODO.
      */
-    private List<RelationMember> nodes;
+    //private List<RelationMember> nodes;
 
     /**
      * TODO.
@@ -61,49 +61,49 @@ public class Relation extends OsmEntity {
      * TODO.
      * @return List<RelationMember>
      */
-    public List<RelationMember> getRelations() {
-        return relations;
-    }
+//    public List<RelationMember> getRelations() {
+//        return relations;
+//    }
 
     /**
      * TODO.
      * @param val to set
      */
-    public void setRelations(final List<RelationMember> val) {
-        this.relations = val;
-    }
+//    public void setRelations(final List<RelationMember> val) {
+//        this.relations = val;
+//    }
 
     /**
      * TODO.
      * @return List<RelationMember>
      */
-    public List<RelationMember> getWays() {
-        return ways;
-    }
+//    public List<RelationMember> getWays() {
+//        return ways;
+//    }
 
     /**
      * TODO.
      * @param val to set
      */
-    public void setWays(final List<RelationMember> val) {
-        this.ways = val;
-    }
+//    public void setWays(final List<RelationMember> val) {
+//        this.ways = val;
+//    }
 
     /**
      * TODO.
      * @return List<RelationMember>
      */
-    public List<RelationMember> getNodes() {
-        return nodes;
-    }
+//    public List<RelationMember> getNodes() {
+//        return nodes;
+//    }
 
     /**
      * TODO.
      * @param val to set
      */
-    public void setNodes(final List<RelationMember> val) {
-        this.nodes = val;
-    }
+//    public void setNodes(final List<RelationMember> val) {
+//        this.nodes = val;
+//    }
 
     /**
      * TODO.
@@ -133,12 +133,12 @@ public class Relation extends OsmEntity {
                 &&
                 Objects.equal(getMembers(), rel.getMembers())
                 &&
-                Objects.equal(getRelations(), rel.getRelations())
-                &&
-                Objects.equal(getWays(), rel.getWays())
-                &&
-                Objects.equal(getNodes(), rel.getNodes())
-                &&
+//                Objects.equal(getRelations(), rel.getRelations())
+//                &&
+//                Objects.equal(getWays(), rel.getWays())
+//                &&
+//                Objects.equal(getNodes(), rel.getNodes())
+//                &&
                 Objects.equal(getTags(), rel.getTags());
     }
 
@@ -149,9 +149,9 @@ public class Relation extends OsmEntity {
     @Override
     public int hashCode() {
         return Objects.hashCode(
-                getId(), getVersion(), getUsername(), getChangeset(),
-                getVisible(), getTimestamp(), getRelations(), getWays(),
-                getNodes(), getTags());
+                getId(), getVersion(), getUsername(), getChangeset(), getVisible(), getTimestamp(),
+//                getRelations(), getWays(), getNodes(),
+                getTags());
     }
 
     /**
@@ -168,9 +168,9 @@ public class Relation extends OsmEntity {
                 .add("visible", getVisible())
                 .add("timestamp", getTimestamp())
                 .add("members", getMembers())
-                .add("relations", getRelations())
-                .add("ways", getWays())
-                .add("nodes", getNodes())
+//                .add("relations", getRelations())
+//                .add("ways", getWays())
+//                .add("nodes", getNodes())
                 .add("tags", getTags())
                 .toString();
     }

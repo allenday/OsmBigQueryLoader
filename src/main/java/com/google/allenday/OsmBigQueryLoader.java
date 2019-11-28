@@ -107,10 +107,10 @@ public class OsmBigQueryLoader {
 
         List<Map<String, String>> beanTags = new ArrayList<>();
         Map<String, String> tags = node.getTags();
-        for (String k : tags.keySet()) {
-            Map<String,String> kv = new HashMap<>();
-            kv.put("key",k);
-            kv.put("value",tags.get(k));
+        for (Map.Entry<String, String> e : tags.entrySet()) {
+            Map<String, String> kv = new HashMap<>();
+            kv.put("key", e.getKey());
+            kv.put("value", e.getValue());
             beanTags.add(kv);
         }
         bean.setTags(beanTags);
@@ -141,10 +141,10 @@ public class OsmBigQueryLoader {
 
         List<Map<String, String>> beanTags = new ArrayList<>();
         Map<String, String> tags = way.getTags();
-        for (String k : tags.keySet()) {
-            Map<String,String> kv = new HashMap<>();
-            kv.put("key",k);
-            kv.put("value",tags.get(k));
+        for (Map.Entry<String, String> e : tags.entrySet()) {
+            Map<String, String> kv = new HashMap<>();
+            kv.put("key", e.getKey());
+            kv.put("value", e.getValue());
             beanTags.add(kv);
         }
         bean.setTags(beanTags);
@@ -165,12 +165,7 @@ public class OsmBigQueryLoader {
     private void processRelations(@SuppressWarnings("unused") final Relation rel) {
         com.google.allenday.osm.domain.Relation bean = new com.google.allenday.osm.domain.Relation();
 
-        //TODO refactor this to use single list with a type field, apparently
-        //TODO it's possible to collate heterogeneous types in a composite and order matters
         List<com.google.allenday.osm.domain.RelationMember> beans = new ArrayList<>();
-        List<com.google.allenday.osm.domain.RelationMember> relations = new ArrayList<>();
-        List<com.google.allenday.osm.domain.RelationMember> ways = new ArrayList<>();
-        List<com.google.allenday.osm.domain.RelationMember> nodes = new ArrayList<>();
 
         List<RelationMember> members = rel.getMembers();
         for (RelationMember member  : members) {
@@ -181,14 +176,6 @@ public class OsmBigQueryLoader {
             rm.setType(member.getType().name());
 
             beans.add(rm);
-
-            if (member.getType()  == RelationMember.Type.NODE) {
-                nodes.add(rm);
-            } else if (member.getType() == RelationMember.Type.WAY) {
-                ways.add(rm);
-            } else if (member.getType() == RelationMember.Type.RELATION) {
-                relations.add(rm);
-            }
         }
 
         bean.setId(rel.getId());
@@ -198,16 +185,16 @@ public class OsmBigQueryLoader {
         bean.setVisible(rel.getInfo().isVisible());
         bean.setTimestamp(rel.getInfo().getTimestamp());
         bean.setMembers(beans);
-        bean.setRelations(relations);
-        bean.setWays(ways);
-        bean.setNodes(nodes);
+        //bean.setRelations(relations);
+        //bean.setWays(ways);
+        //bean.setNodes(nodes);
 
         List<Map<String, String>> beanTags = new ArrayList<>();
         Map<String, String> tags = rel.getTags();
-        for (String k : tags.keySet()) {
-            Map<String,String> kv = new HashMap<>();
-            kv.put("key",k);
-            kv.put("value",tags.get(k));
+        for (Map.Entry<String, String> e : tags.entrySet()) {
+            Map<String, String> kv = new HashMap<>();
+            kv.put("key", e.getKey());
+            kv.put("value", e.getValue());
             beanTags.add(kv);
         }
         bean.setTags(beanTags);
@@ -317,7 +304,7 @@ public class OsmBigQueryLoader {
      */
     public static void main(final String[] args) throws IOException {
         Logger root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
-        root.setLevel(Level.TRACE);
+        root.setLevel(Level.WARN);
 
 
         InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("sample.pbf");
