@@ -47,9 +47,19 @@ public class OsmBigQueryLoader {
      * @param header Header
      */
     void processHeader(@SuppressWarnings("unused") final Header header) {
-        synchronized (output) {
-            output.append(header);
-            output.append("\n");
+        com.google.allenday.osm.domain.Header bean = new com.google.allenday.osm.domain.Header();
+
+        bean.setRequiredFeatures(header.getRequiredFeatures());
+        bean.setOptionalFeatures(header.getOptionalFeatures());
+        bean.setwritingProgram(header.getWritingProgram());
+        bean.setSource(header.getSource());
+
+        try {
+            String jsonInString = mapper.writeValueAsString(bean);
+            safePrintln(outputs.get("header"), jsonInString);
+        } catch (IOException e) {
+            System.err.println("********** header");
+            e.printStackTrace();
         }
     }
     /**
@@ -57,24 +67,33 @@ public class OsmBigQueryLoader {
      * @param bbox BoundBoxs
      */
     private void processBoundingBox(@SuppressWarnings("unused") final BoundBox bbox) {
-//        synchronized (output) {
-//            output.append(bbox);
-//            output.append("\n");
-//        }
+        com.google.allenday.osm.domain.BoundingBox bean = new com.google.allenday.osm.domain.BoundingBox();
+        bean.setTop(bbox.getTop());
+        bean.setLeft(bbox.getLeft());
+        bean.setBottom(bbox.getBotttom());
+        bean.setRight(bbox.getRight());
+
+        try {
+            String jsonInString = mapper.writeValueAsString(bean);
+            safePrintln(outputs.get("boundingbox"), jsonInString);
+        } catch (IOException e) {
+            System.err.println("********** boundingbox");
+            e.printStackTrace();
+        }
     }
     /**
      * TODO.
      * @param id Long
      */
     private void processChangesets(@SuppressWarnings("unused") final Long id) {
-//        changesetsCounter.incrementAndGet();
+        //TODO seems that these don't exist as standalone objects, but are
+        //TODO rather just Longs present in nodes/ways/relations
     }
     /**
      * TODO.
      * @param node Node
      */
     private void processNodes(@SuppressWarnings("unused") final Node node) {
-//        nodesCounter.incrementAndGet();
         com.google.allenday.osm.domain.Node bean = new com.google.allenday.osm.domain.Node();
 
         bean.setId(node.getId());
@@ -91,7 +110,7 @@ public class OsmBigQueryLoader {
             String jsonInString = mapper.writeValueAsString(bean);
             safePrintln(outputs.get("node"), jsonInString);
         } catch (IOException e) {
-            System.err.println("********** 3");
+            System.err.println("********** node");
             e.printStackTrace();
         }
 
@@ -101,7 +120,6 @@ public class OsmBigQueryLoader {
      * @param way Way
      */
     private void processWays(@SuppressWarnings("unused") final Way way) {
-//        waysCounter.incrementAndGet();
         com.google.allenday.osm.domain.Way bean = new com.google.allenday.osm.domain.Way();
 
         bean.setId(way.getId());
@@ -117,7 +135,7 @@ public class OsmBigQueryLoader {
             String jsonInString = mapper.writeValueAsString(bean);
             safePrintln(outputs.get("way"), jsonInString);
         } catch (IOException e) {
-            System.err.println("********** 2");
+            System.err.println("********** way");
             e.printStackTrace();
         }
     }
@@ -127,19 +145,14 @@ public class OsmBigQueryLoader {
      * @param rel Relation
      */
     private void processRelations(@SuppressWarnings("unused") final Relation rel) {
-//        relationsCounter.incrementAndGet();
         com.google.allenday.osm.domain.Relation bean = new com.google.allenday.osm.domain.Relation();
 
         //TODO refactor this to use single list with a type field, apparently
-        //it's possible to collate heterogeneous types in a composite and order matters
-        List<com.google.allenday.osm.domain.RelationMember> beans
-                = new ArrayList<com.google.allenday.osm.domain.RelationMember>();
-        List<com.google.allenday.osm.domain.RelationMember> relations
-                = new ArrayList<com.google.allenday.osm.domain.RelationMember>();
-        List<com.google.allenday.osm.domain.RelationMember> ways
-                = new ArrayList<com.google.allenday.osm.domain.RelationMember>();
-        List<com.google.allenday.osm.domain.RelationMember> nodes
-                = new ArrayList<com.google.allenday.osm.domain.RelationMember>();
+        //TODO it's possible to collate heterogeneous types in a composite and order matters
+        List<com.google.allenday.osm.domain.RelationMember> beans = new ArrayList<>();
+        List<com.google.allenday.osm.domain.RelationMember> relations = new ArrayList<>();
+        List<com.google.allenday.osm.domain.RelationMember> ways = new ArrayList<>();
+        List<com.google.allenday.osm.domain.RelationMember> nodes = new ArrayList<>();
 
         List<RelationMember> members = rel.getMembers();
         for (RelationMember member  : members) {
@@ -173,11 +186,10 @@ public class OsmBigQueryLoader {
         bean.setNodes(nodes);
 
         try {
-            //jsonInString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(bean);
             String jsonInString = mapper.writeValueAsString(bean);
             safePrintln(outputs.get("relation"), jsonInString);
         } catch (IOException e) {
-            System.err.println("********** 1");
+            System.err.println("********** relation");
             e.printStackTrace();
         }
     }
@@ -228,12 +240,12 @@ public class OsmBigQueryLoader {
             outputs.put("header", bw);
             parser = parser.onHeader(this::processHeader);
         }
-        if (filters.contains("boundbox") || all) {
-            FileOutputStream fos = new FileOutputStream("boundbox.json.gz");
+        if (filters.contains("boundingbox") || all) {
+            FileOutputStream fos = new FileOutputStream("boundingbox.json.gz");
             GZIPOutputStream zos = new GZIPOutputStream(fos);
             OutputStreamWriter osw = new OutputStreamWriter(zos, StandardCharsets.UTF_8);
             BufferedWriter bw = new BufferedWriter(osw);
-            outputs.put("boundbox", bw);
+            outputs.put("boundingbox", bw);
             parser = parser.onBoundBox(this::processBoundingBox);
         }
         if (filters.contains("node") || all) {
@@ -260,14 +272,9 @@ public class OsmBigQueryLoader {
             outputs.put("relation", bw);
             parser = parser.onRelation(this::processRelations);
         }
-        if (filters.contains("changeset") || all) {
-            FileOutputStream fos = new FileOutputStream("changeset.json.gz");
-            GZIPOutputStream zos = new GZIPOutputStream(fos);
-            OutputStreamWriter osw = new OutputStreamWriter(zos, StandardCharsets.UTF_8);
-            BufferedWriter bw = new BufferedWriter(osw);
-            outputs.put("changeset", bw);
-            parser = parser.onChangeset(this::processChangesets);
-        }
+        //TODO never happens
+        //if (filters.contains("changeset") || all) {
+        //}
 
         parser.parse();
 
