@@ -7,9 +7,9 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.zip.GZIPOutputStream;
 
 /**
  * Load OSM records to BigQuery.
@@ -221,32 +221,50 @@ public class OsmBigQueryLoader {
         Boolean all = filters.contains("all") ? true : false;
 
         if (filters.contains("header") || all) {
-            BufferedWriter bw = Files.newBufferedWriter(Paths.get("header.json"));
+            FileOutputStream fos = new FileOutputStream("header.json.gz");
+            GZIPOutputStream zos = new GZIPOutputStream(fos);
+            OutputStreamWriter osw = new OutputStreamWriter(zos, StandardCharsets.UTF_8);
+            BufferedWriter bw = new BufferedWriter(osw);
             outputs.put("header", bw);
             parser = parser.onHeader(this::processHeader);
         }
         if (filters.contains("boundbox") || all) {
-            BufferedWriter bw = Files.newBufferedWriter(Paths.get("boundbox.json"));
+            FileOutputStream fos = new FileOutputStream("boundbox.json.gz");
+            GZIPOutputStream zos = new GZIPOutputStream(fos);
+            OutputStreamWriter osw = new OutputStreamWriter(zos, StandardCharsets.UTF_8);
+            BufferedWriter bw = new BufferedWriter(osw);
             outputs.put("boundbox", bw);
             parser = parser.onBoundBox(this::processBoundingBox);
         }
         if (filters.contains("node") || all) {
-            BufferedWriter bw = Files.newBufferedWriter(Paths.get("node.json"));
+            FileOutputStream fos = new FileOutputStream("node.json.gz");
+            GZIPOutputStream zos = new GZIPOutputStream(fos);
+            OutputStreamWriter osw = new OutputStreamWriter(zos, StandardCharsets.UTF_8);
+            BufferedWriter bw = new BufferedWriter(osw);
             outputs.put("node", bw);
             parser = parser.onNode(this::processNodes);
         }
         if (filters.contains("way") || all) {
-            BufferedWriter bw = Files.newBufferedWriter(Paths.get("way.json"));
+            FileOutputStream fos = new FileOutputStream("way.json.gz");
+            GZIPOutputStream zos = new GZIPOutputStream(fos);
+            OutputStreamWriter osw = new OutputStreamWriter(zos, StandardCharsets.UTF_8);
+            BufferedWriter bw = new BufferedWriter(osw);
             outputs.put("way", bw);
             parser = parser.onWay(this::processWays);
         }
         if (filters.contains("relation") || all) {
-            BufferedWriter bw = Files.newBufferedWriter(Paths.get("relation.json"));
+            FileOutputStream fos = new FileOutputStream("relation.json.gz");
+            GZIPOutputStream zos = new GZIPOutputStream(fos);
+            OutputStreamWriter osw = new OutputStreamWriter(zos, StandardCharsets.UTF_8);
+            BufferedWriter bw = new BufferedWriter(osw);
             outputs.put("relation", bw);
             parser = parser.onRelation(this::processRelations);
         }
         if (filters.contains("changeset") || all) {
-            BufferedWriter bw = Files.newBufferedWriter(Paths.get("changeset.json"));
+            FileOutputStream fos = new FileOutputStream("changeset.json.gz");
+            GZIPOutputStream zos = new GZIPOutputStream(fos);
+            OutputStreamWriter osw = new OutputStreamWriter(zos, StandardCharsets.UTF_8);
+            BufferedWriter bw = new BufferedWriter(osw);
             outputs.put("changeset", bw);
             parser = parser.onChangeset(this::processChangesets);
         }
