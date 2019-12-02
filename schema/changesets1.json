@@ -1,0 +1,45 @@
+[
+   {
+      "type":"INTEGER",
+      "name":"id",
+      "description": "Changeset ID."
+   },
+   {
+      "type":"TIMESTAMP",
+      "name":"osm_timestamp_min",
+      "description": "Minimum timestamp of objects contained in this changeset."
+   },
+   {
+      "type":"TIMESTAMP",
+      "name":"osm_timestamp_max",
+      "description": "Maximum timestamp of objects contained in this changeset."
+   },
+   {
+      "type":"GEOGRAPHY",
+      "name":"geometry",
+      "description": "GEOGRAPHY-encoded UNION (using ST_UNION_AGG()) of all objects contained in this changeset"
+   },
+   {
+      "type":"GEOGRAPHY",
+      "name":"boundingbox",
+      "description": "GEOGRAPHY-encoded bounding box of geometry"
+   },
+   {
+      "type":"INTEGER",
+      "mode":"REPEATED",
+      "name":"relations",
+      "description": "Relations that are part of this way"
+   },
+   {
+      "type":"INTEGER",
+      "mode":"REPEATED",
+      "name":"ways",
+      "description": "Ways that are part of this way"
+   },
+   {
+      "type":"INTEGER",
+      "mode":"REPEATED",
+      "name":"nodes",
+      "description": "Nodes that are part of this way"
+   }
+]

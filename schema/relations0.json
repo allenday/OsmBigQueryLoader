@@ -1,0 +1,73 @@
+[
+   {
+      "type":"INTEGER",
+      "name":"id",
+      "description": "Object unique ID."
+   },
+   {
+      "type":"INTEGER",
+      "name":"version",
+      "description": "Version number for this object."
+   },
+   {
+      "type":"STRING",
+      "name":"username",
+      "description": "Name of user who created this version of the object."
+   },
+   {
+      "type":"INTEGER",
+      "name":"changeset",
+      "description": "Changeset number for this object."
+   },
+   {
+      "type":"BOOLEAN",
+      "name":"visible",
+      "description": "Is this version of the object visible?"
+   },
+   {
+      "type":"INTEGER",
+      "name":"osm_timestamp",
+      "description": "Last-modified timestamp (as INTEGER) for this object."
+   },
+   {
+      "type":"RECORD",
+      "mode":"REPEATED",
+      "name":"members",
+      "description": "Union of all typed members (relations, ways, nodes) of this relation, if any.",
+      "fields":[
+          {
+              "type":"STRING",
+              "name":"type",
+              "description": "Type of this member (NODE, WAY, RELATION)."
+          },
+          {
+              "type":"INTEGER",
+              "name":"id",
+              "description": "ID of this member."
+          },
+          {
+              "type":"STRING",
+              "name":"role",
+              "description": "Role of this relation, if any."
+          }
+      ]
+   },
+   {
+      "type":"RECORD",
+      "mode":"REPEATED",
+      "name":"all_tags",
+      "description": "Unstructured key=value attributes for this object.",
+      "fields":[
+         {
+            "type":"STRING",
+            "name":"key",
+            "description": "Attribute key."
+         },
+         {
+            "type":"STRING",
+            "name":"value",
+            "description": "Attribute value."
+         }
+      ]
+   }
+]
