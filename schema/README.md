@@ -1,4 +1,8 @@
+![PBF ETL](pbf-etl.png)
+
+
 # Create phase0 tables
+
 - CREATE nodes0.json
 - CREATE ways0.json
 - CREATE relations0.json
