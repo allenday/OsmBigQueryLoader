@@ -1,3 +1,4 @@
+echo "
 WITH
 relations AS (
 SELECT
@@ -5,7 +6,7 @@ SELECT
   MIN(osm_timestamp) AS osm_timestamp_min,
   MAX(osm_timestamp) AS osm_timestamp_max,
   ARRAY_AGG(id) AS relations
-FROM `openstreetmap-public-data-dev.osmbigqueryloader_dev.planet_relations0`
+FROM \`${PROJECT}.${DATASET}.${PREFIX}_relations0\`
 GROUP BY changeset
 ),
 ways AS (
@@ -14,7 +15,7 @@ SELECT
   MIN(osm_timestamp) AS osm_timestamp_min,
   MAX(osm_timestamp) AS osm_timestamp_max,
   ARRAY_AGG(id) AS ways
-FROM `openstreetmap-public-data-dev.osmbigqueryloader_dev.planet_ways0`
+FROM \`${PROJECT}.${DATASET}.${PREFIX}_ways0\`
 GROUP BY changeset
 ),
 nodes AS (
@@ -23,7 +24,7 @@ SELECT
   MIN(CAST(osm_timestamp/1000 AS INT64)) AS osm_timestamp_min,
   MAX(CAST(osm_timestamp/1000 AS INT64)) AS osm_timestamp_max,
   ARRAY_AGG(id) AS nodes
-FROM `openstreetmap-public-data-dev.osmbigqueryloader_dev.planet_nodes0`
+FROM \`${PROJECT}.${DATASET}.${PREFIX}_nodes0\`
 GROUP BY changeset
 ),
 times AS (
@@ -41,7 +42,7 @@ times AS (
 )
 
 SELECT
-  times.changeset,
+  times.changeset AS id,
   times.osm_timestamp_min AS osm_timestamp_min,
   times.osm_timestamp_max AS osm_timestamp_max,
   relations.relations AS relations,
@@ -54,8 +55,4 @@ FROM
   FULL OUTER JOIN relations USING(changeset)
 WHERE
   TRUE
---  AND ARRAY_LENGTH(nodes.nodes) > 0
---  AND ARRAY_LENGTH(ways.ways) > 0 
---  AND ARRAY_LENGTH(relations.relations) > 0 
---LIMIT 1000
-
+"

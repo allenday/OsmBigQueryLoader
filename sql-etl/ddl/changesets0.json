@@ -5,12 +5,12 @@
       "description": "Changeset ID."
    },
    {
-      "type":"TIMESTAMP",
+      "type":"INTEGER",
       "name":"osm_timestamp_min",
       "description": "Minimum timestamp of objects contained in this changeset."
    },
    {
-      "type":"TIMESTAMP",
+      "type":"INTEGER",
       "name":"osm_timestamp_max",
       "description": "Maximum timestamp of objects contained in this changeset."
    },
