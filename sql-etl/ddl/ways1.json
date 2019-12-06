@@ -42,33 +42,28 @@
    },
    {
       "type":"RECORD",
-      "name":"bounding_box",
-      "description": "GEOGRAPHY-encoded bounding box of this way",
+      "name":"extent",
+      "description": "bounding box of this way",
       "fields":[
           {
-              "type":"GEOGRAPHY",
-              "name":"geometry",
-              "description": "GEOGRAPHY-encoded bounding box of this way's nodes"
+              "type":"FLOAT64",
+              "name":"minx",
+              "description": "minimum longitude of the bounding box"
           },
           {
-              "type":"GEOGRAPHY",
-              "name":"top_left",
-              "description": "GEOGRAPHY-encoded (top,left) point of this bounding box"
+              "type":"FLOAT64",
+              "name":"miny",
+              "description": "minimum lattude of the bounding box"
           },
           {
-              "type":"GEOGRAPHY",
-              "name":"bottom_left",
-              "description": "GEOGRAPHY-encoded (bottom,left) point of this bounding box"
+              "type":"FLOAT64",
+              "name":"maxx",
+              "description": "maximum longitude of the bounding box"
           },
           {
-              "type":"GEOGRAPHY",
-              "name":"bottom_right",
-              "description": "GEOGRAPHY-encoded (bottom,right) point of this bounding box"
-          },
-          {
-              "type":"GEOGRAPHY",
-              "name":"top_right",
-              "description": "GEOGRAPHY-encoded (top,right) point of this bounding box"
+              "type":"FLOAT64",
+              "name":"maxy",
+              "description": "maximum latitude of the bounding box"
           }
       ]
    },
