@@ -11,7 +11,7 @@ SELECT
   ways.changeset,
   ways.visible,
   TIMESTAMP_SECONDS(CAST(ways.osm_timestamp/1000 AS INT64)) AS osm_timestamp,
-  COALESCE(SAFE.ST_MAKEPOLYGON(ST_MAKELINE(ARRAY_AGG(nodes.geometry))), SAFE.ST_MAKELINE(ARRAY_AGG(nodes.geometry))) AS geometry
+  SAFE.ST_MAKELINE(ARRAY_AGG(nodes.geometry)) AS geometry
 FROM
   \`${PROJECT}.${DATASET}.${PREFIX}_ways0\` AS ways JOIN UNNEST(nodes) AS waynode,
   \`${PROJECT}.${DATASET}.${PREFIX}_nodes1\` AS nodes
