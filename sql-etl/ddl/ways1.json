@@ -10,79 +10,8 @@
       "description": "Version number for this object."
    },
    {
-      "type":"STRING",
-      "name":"username",
-      "description": "Name of user who created this version of the object."
-   },
-   {
-      "type":"INTEGER",
-      "name":"changeset",
-      "description": "Changeset number for this object."
-   },
-   {
-      "type":"BOOLEAN",
-      "name":"visible",
-      "description": "Is this version of the object visible?"
-   },
-   {
-      "type":"TIMESTAMP",
-      "name":"osm_timestamp",
-      "description": "Last-modified timestamp for this object."
-   },
-   {
-      "type":"INTEGER",
-      "mode":"REPEATED",
-      "name":"nodes",
-      "description": "Nodes that are part of this way"
-   },
-   {
       "type":"GEOGRAPHY",
       "name":"geometry",
-      "description": "GEOGRAPHY-encoded polygon or linestring of this way's nodes"
-   },
-   {
-      "type":"RECORD",
-      "name":"extent",
-      "description": "bounding box of this way",
-      "fields":[
-          {
-              "type":"FLOAT64",
-              "name":"minx",
-              "description": "minimum longitude of the bounding box"
-          },
-          {
-              "type":"FLOAT64",
-              "name":"miny",
-              "description": "minimum lattude of the bounding box"
-          },
-          {
-              "type":"FLOAT64",
-              "name":"maxx",
-              "description": "maximum longitude of the bounding box"
-          },
-          {
-              "type":"FLOAT64",
-              "name":"maxy",
-              "description": "maximum latitude of the bounding box"
-          }
-      ]
-   },
-   {
-      "type":"RECORD",
-      "mode":"REPEATED",
-      "name":"all_tags",
-      "description": "Unstructured key=value attributes for this object.",
-      "fields":[
-         {
-            "type":"STRING",
-            "name":"key",
-            "description": "Attribute key."
-         },
-         {
-            "type":"STRING",
-            "name":"value",
-            "description": "Attribute value."
-         }
-      ]
+      "description": "GEOGRAPHY-encoding of this way's nodes"
    }
 ]

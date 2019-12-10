@@ -1,40 +1,22 @@
 echo "
-SELECT w.id, w.version, w.username, w.changeset, w.visible, w.osm_timestamp, t.nodes, w.geometry, 
-  \`${PROJECT}.${DATASET}.get_extent\`(w.geometry) AS extent, t.all_tags FROM
-(
-
---linestring
-SELECT
-  ways.id,
-  ways.version,
-  ways.username,
-  ways.changeset,
-  ways.visible,
-  TIMESTAMP_SECONDS(CAST(ways.osm_timestamp/1000 AS INT64)) AS osm_timestamp,
-  SAFE.ST_MAKELINE(ARRAY_AGG(nodes.geometry)) AS geometry
-FROM
-  \`${PROJECT}.${DATASET}.${PREFIX}_ways0\` AS ways JOIN UNNEST(nodes) AS waynode,
-  \`${PROJECT}.${DATASET}.${PREFIX}_nodes1\` AS nodes
-WHERE waynode = nodes.id AND NOT EXISTS(SELECT 1 FROM UNNEST(ways.all_tags) WHERE key = 'area' AND value = 'yes')
-GROUP BY ways.id, ways.version, ways.username, ways.changeset, ways.visible, ways.osm_timestamp
-
-UNION ALL
-
---polygon
-SELECT
-  ways.id,
-  ways.version,
-  ways.username,
-  ways.changeset,
-  ways.visible,
-  TIMESTAMP_SECONDS(CAST(ways.osm_timestamp/1000 AS INT64)) AS osm_timestamp,
-  COALESCE(SAFE.ST_MAKEPOLYGON(ST_MAKELINE(ARRAY_AGG(nodes.geometry))), SAFE.ST_MAKELINE(ARRAY_AGG(nodes.geometry))) AS geometry
-FROM
-  \`${PROJECT}.${DATASET}.${PREFIX}_ways0\` AS ways JOIN UNNEST(nodes) AS waynode,
-  \`${PROJECT}.${DATASET}.${PREFIX}_nodes1\` AS nodes
-WHERE waynode = nodes.id AND EXISTS(SELECT 1 FROM UNNEST(ways.all_tags) WHERE key = 'area' AND value = 'yes')
-GROUP BY ways.id, ways.version, ways.username, ways.changeset, ways.visible, ways.osm_timestamp
-)
-AS w, \`${PROJECT}.${DATASET}.${PREFIX}_ways0\` AS t
-WHERE w.id = t.id
+SELECT ways.id,ways.version,SAFE.ST_MAKELINE(ARRAY_AGG(nodes.geometry)) AS geometry
+FROM \`${PROJECT}.${DATASET}.${PREFIX}_ways0\` AS ways JOIN UNNEST(ways.nodes) AS waynodes
+JOIN \`${PROJECT}.${DATASET}.${PREFIX}_nodes1\` AS nodes ON (waynodes = nodes.id AND ways.version = nodes.version)
+WHERE ARRAY_LENGTH(ways.nodes) >= ($W)*100 AND ARRAY_LENGTH(ways.nodes) < ($W+1)*100
+GROUP BY ways.id, ways.version 
 "
+
+#HAVING COUNT(nodes.geometry) >= 1900 AND COUNT(nodes.geometry) < 2000
+#WITH nc AS (
+#  SELECT CONCAT(CAST(ways.id AS STRING), '.', CAST(ways.version AS STRING)) AS vid, ARRAY_LENGTH(ARRAY_AGG(nodes.geometry)) AS len
+#  FROM \`${PROJECT}.${DATASET}.${PREFIX}_ways0\` AS ways JOIN UNNEST(ways.nodes) AS waynodes
+#  JOIN \`${PROJECT}.${DATASET}.${PREFIX}_nodes1\` AS nodes ON (waynodes = nodes.id AND ways.version = nodes.version)
+#  GROUP BY ways.id, ways.version 
+#)
+#
+#SELECT ways.id,ways.version,SAFE.ST_MAKELINE(ARRAY_AGG(nodes.geometry)) AS geometry
+#FROM \`${PROJECT}.${DATASET}.${PREFIX}_ways0\` AS ways JOIN UNNEST(ways.nodes) AS waynodes
+#JOIN \`${PROJECT}.${DATASET}.${PREFIX}_nodes1\` AS nodes ON (waynodes = nodes.id AND ways.version = nodes.version)
+#WHERE
+#  CONCAT(CAST(ways.id AS STRING), '.', CAST(ways.version AS STRING)) NOT IN (SELECT vid FROM nc WHERE len > 2000)
+#GROUP BY ways.id, ways.version 

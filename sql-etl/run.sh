@@ -37,7 +37,10 @@ export HEADLESS=""
 # === ways1 ===
 bq rm --force --project_id ${PROJECT} ${HEADLESS} --dataset_id "${PROJECT}:${DATASET}" ${PREFIX}_ways1
 bq mk --force --project_id ${PROJECT} ${HEADLESS} --dataset_id "${PROJECT}:${DATASET}" --schema ddl/ways1.json ${PREFIX}_ways1
-bash ./dml/ways1.sql.sh | bq query --project_id ${PROJECT} ${HEADLESS} --dataset_id "${PROJECT}:${DATASET}" --nouse_legacy_sql --destination_table ${PREFIX}_ways1
+for W in `seq -f '%02g' 0 99`; do
+  echo "ways1 $W"
+W=$W bash ./dml/ways1.sql.sh | bq query --project_id ${PROJECT} ${HEADLESS} --dataset_id "${PROJECT}:${DATASET}" --nouse_legacy_sql --batch --destination_table ${PREFIX}_ways1 --append_table --max_statement_results 0 --display_name "ways1_$W" &
+done
 
 
 
